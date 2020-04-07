@@ -178,22 +178,25 @@ int main(void) {
         Matrix4 pro_transl;
         if (isPressed(window, GLFW_KEY_W)) {
             pro_transl.translate(0,0,move);
-	    inside.eye = inside.eye + Vector4(0,0,-move);
+            inside.eye = inside.eye + Vector4(0,0,-move);
+            inside.origin = inside.origin + Vector4(0,0,-move);
 
         }
         else if (isPressed(window, GLFW_KEY_S)) {
             pro_transl.translate(0,0, -move);
-		inside.eye = inside.eye + Vector4(0,0,move);
-
+            inside.eye = inside.eye + Vector4(0,0,move);
+            inside.origin = inside.origin + Vector4(0,0,move);
         }
         else if (isPressed(window, GLFW_KEY_A)) {
             pro_transl.translate(move,0,0);
-            inside.eye = inside.eye + Vector4(move,0,0);
+            inside.eye = inside.eye + Vector4(-move,0,0);
+            inside.origin = inside.origin + Vector4(-move,0,0);
 
         }
         else if (isPressed(window, GLFW_KEY_D)) {
             pro_transl.translate(-move, 0, 0);
-            inside.eye = inside.eye + Vector4(-move,0,0);
+            inside.eye = inside.eye + Vector4(move,0,0);
+            inside.origin = inside.origin + Vector4(move,0,0);
 
         }
         
@@ -206,7 +209,7 @@ int main(void) {
         }
         else if (isPressed(window, GLFW_KEY_G)){
 		angle = angle - move;
-		inside.origin = Vector4(-cos(angle),-0.9,-cos(angle));
+		inside.origin = Vector4(-cos(angle),-0.9,cos(angle));
         }
 
 		
