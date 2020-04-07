@@ -19,6 +19,7 @@
 #include "renderer.h"
 
 double move = 0.01;
+position = Vector4(-0.9,-0.9,0.94);
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 960;
@@ -178,9 +179,9 @@ int main(void) {
         Matrix4 pro_transl;
         if (isPressed(window, GLFW_KEY_W)) {
             pro_transl.translate(0,0,move);
+            
             inside.eye = inside.eye + Vector4(0,0,-move);
             inside.origin = inside.origin + Vector4(0,0,-move);
-
         }
         else if (isPressed(window, GLFW_KEY_S)) {
             pro_transl.translate(0,0, -move);
@@ -211,6 +212,8 @@ int main(void) {
 		angle = angle - move;
 		inside.origin = Vector4(-cos(angle),-0.9,cos(angle));
         }
+        
+        
 
 		
         
