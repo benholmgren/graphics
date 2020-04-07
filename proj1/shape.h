@@ -23,6 +23,10 @@ void add_vertex(T& coords, const N& x, const N& y, const N& z,
     coords.push_back(normal.z());
 }
 
+
+
+			
+	
 class MazeFloor {
     public:
     std::vector<float> coords;
@@ -917,6 +921,45 @@ public:
             }
         }
     }
+};
+
+class Wall {
+	public:
+	std::vector<float> coords;
+	Wall(float x, float y, float z, float size ) {
+	//origin
+	float vertex1[6] = {x, y, z, .5, .5, 1};
+	//Bottom right 1,0,0
+	float vertex2[6] = {x+size, y, z, .2, .2, .5};
+	//Bottom
+	//Bottom
+	/*
+	 x, y, ,  , 1.0f, 0.0f,  0.0f,  1.0f,  0.0,
+         x, -0.94f, -0.03f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0,
+         x, -0.94f,  0.03f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0,
+         , -0.94f,  0.03f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0,
+         0.00f, -0.94f,  0.03f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0,
+         0.00f, -0.94f, -0.03f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0
+	 */
+
+		
+	}
+};
+
+class Maze {
+public:
+	std::vector<float> coords;
+	float size = 1;
+	Maze() {
+		for(int i = 0; i < 25; i++){
+			Wall block(0, 0, 0, 1);
+			for(int j = 0; j<block.coords.size();j++){
+				coords.push_back(block.coords[0]);
+			}
+		}
+	}
+	
+	
 };
 
 class Torus {

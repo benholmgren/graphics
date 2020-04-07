@@ -75,4 +75,16 @@ public:
     }
 };
 
+
+Vector4 operator+(const Vector4& v, const Vector4 w)  {
+        return Vector4(
+
+                w.values[0] + v.values[0],
+                w.values[1] + v.values[1],
+                w.values[2] + v.values[2]
+		//,
+                //w.values[3] + v.values[3]
+		);
+    }
+
 #endif

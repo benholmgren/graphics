@@ -118,11 +118,12 @@ int main(void) {
     
 
     // make a floor
+    float init[3] = {0.90, 0, -0.94};
     Model protagonist(
             DiscoCube().coords,
             Shader("../vert.glsl", "../frag.glsl"));
     Matrix4 pro_trans, pro_roty;
-    pro_trans.translate(0.90, 0, -0.94);
+    pro_trans.translate(init[0], init[1], init[2]);
     pro_roty.rotate_y(180);
     protagonist.model = pro_roty*pro_trans;
 
@@ -130,11 +131,11 @@ int main(void) {
     Matrix4 projection;
     projection.perspective(45, 1, .01, 10);
 
-    Camera camera;
-    camera.projection = projection;
-    camera.eye = Vector4(0, 0, 3);
-    camera.origin = Vector4(0, 0, 0);
-    camera.up = Vector4(0, 1, 0);
+    Camera regular;
+    regular.projection = projection;
+    regular.eye = Vector4(0, 0, 3);
+    regular.origin = Vector4(0, 0, 0);
+    regular.up = Vector4(0, 1, 0);
 
     // and use z-buffering
     glEnable(GL_DEPTH_TEST);
@@ -142,9 +143,21 @@ int main(void) {
     // create a renderer
     Renderer renderer;
 
+    // camera in box
+    Camera inside;
+    inside.projection = projection;
+    inside.eye = Vector4(init[0],init[1],init[2]);
+    inside.origin = Vector4(0,0,-init[2]);
+    inside.up = Vector4(0,1,0);
+
     // set the light position
     Vector4 lightPos(3.75f, 3.75f, 4.0f);
 
+    //Camera matrix
+    Camera camera;
+    camera = regular;
+    float angle = 0;
+    int count = 0;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         // process input
@@ -158,16 +171,46 @@ int main(void) {
         Matrix4 pro_transl;
         if (isPressed(window, GLFW_KEY_W)) {
             pro_transl.translate(0,0,move);
+	    inside.eye = inside.eye + Vector4(0,0,move);
+	    std::cout << inside.eye.values[0] << " " << inside.eye.values[1] << " " << inside.eye.values[2] << std::endl;
+
         }
         else if (isPressed(window, GLFW_KEY_S)) {
             pro_transl.translate(0,0, -1 * move);
+		inside.eye = inside.eye + Vector4(0,0,-move);
+
         }
         else if (isPressed(window, GLFW_KEY_A)) {
             pro_transl.translate(move,0,0);
+		inside.eye = inside.eye + Vector4(move,0,0);
+
         }
         else if (isPressed(window, GLFW_KEY_D)) {
             pro_transl.translate(-1 * move, 0, 0);
+		inside.eye = inside.eye + Vector4(-move,0,0);
+
         }
+	else if (isPressed(window, GLFW_KEY_SPACE)){
+		count++;
+	}
+	else if (isPressed(window, GLFW_KEY_X)){
+		count++;
+	}
+	else if (isPressed(window, GLFW_KEY_F)){
+		angle = angle + move;
+		inside.origin = cos(angle);
+	}
+	else if (isPressed(window, GLFW_KEY_G)){
+		angle = angle - move;
+		inside.origin = cos(angle);
+	}
+
+		
+	if(count%2 == 0){
+		camera = regular;
+	}else{
+		camera = inside;
+	}
         
         protagonist.model = protagonist.model * pro_transl;
         // render the object and the floor
