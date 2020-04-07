@@ -1005,6 +1005,59 @@ class Wall {
 	}
 };
 
+template <typename T>
+std::vector<float> cube_texture(T& coords) {
+	std::vector<float> newcoords;
+	
+	for(int i = 0; i < coords.size()/9; i++){
+		//Vertex data
+		newcoords.push_back(coords[9*i]);
+		newcoords.push_back(coords[(9*i)+1]);
+		newcoords.push_back(coords[(9*i)+2]);
+		newcoords.push_back(coords[(9*i)+3]);
+		newcoords.push_back(coords[(9*i)+4]);
+		newcoords.push_back(coords[(9*i)+5]);
+		newcoords.push_back(coords[(9*i)+6]);
+		newcoords.push_back(coords[(9*i)+7]);
+		newcoords.push_back(coords[(9*i)+8]);
+		//UV Coords data
+		int n = i%6;
+		
+		switch (n)
+		{
+			case 0:
+				newcoords.push_back(0);
+				newcoords.push_back(0);
+				break;
+			case 1:
+				newcoords.push_back(1);
+				newcoords.push_back(0);
+				break;
+
+			case 2:
+				newcoords.push_back(1);
+				newcoords.push_back(1);
+				break;
+			case 3:
+				newcoords.push_back(1);
+				newcoords.push_back(1);
+				break;
+			case 4:
+				newcoords.push_back(0);
+				newcoords.push_back(1);
+				break;
+			case 5:
+				newcoords.push_back(0);
+				newcoords.push_back(0);			
+				break;
+			default:
+				std::cout << "POOP" << std::endl;
+				break;
+		}
+	}
+	return newcoords;
+}
+
 class Maze {
 public:
 	std::vector<float> coords;

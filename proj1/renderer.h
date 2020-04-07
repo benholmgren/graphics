@@ -17,6 +17,7 @@ public:
         Uniform::set(m.shader.id(), "eye", camera.eye);
         Uniform::set(m.shader.id(), "lightPos", light);
         Uniform::set(m.shader.id(), "itModel", itModel_tmp);
+	Uniform::set(m.shader.id(), "map", 0);
 
         // render the cube
         glBindVertexArray(m.vao);

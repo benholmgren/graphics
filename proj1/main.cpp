@@ -7,6 +7,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <../../stb/include/stb/stb_image.h>
+
 #include <csci441/shader.h>
 #include <csci441/matrix4.h>
 #include <csci441/matrix3.h>
@@ -74,6 +77,54 @@ void errorCallback(int error, const char* description) {
     fprintf(stderr, "GLFW Error: %s\n", description);
 }
 
+GLuint loadTexture(const std::string& path, bool flip=true) {
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+    stbi_set_flip_vertically_on_load(flip);
+    unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
+    if (data) {
+        GLenum format = 0;
+        switch (nrComponents) {
+            case 1: format = GL_RED; break;
+            case 3: format = GL_RGB; break;
+            case 4: format = GL_RGBA; break;
+        }
+
+        /**
+         * TODO: Part-3 create a texture map for an image
+         */
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    std::cout << width << " " << height << " " << data[1] << " " << nrComponents <<std::endl;
+    glTexImage2D(GL_TEXTURE_2D, 0,format,width,height,0,format,GL_UNSIGNED_BYTE,data);
+
+    //mipmap
+glGenerateMipmap(GL_TEXTURE_2D);
+
+ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    //Interpolation
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+/*
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		    
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+*/
+
+        stbi_image_free(data);
+    } else {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;
+}
+
 
 int main(void) {
     GLFWwindow* window;
@@ -109,9 +160,13 @@ int main(void) {
     }
 
     // create maze
+    MazeFloor floor = MazeFloor();
+    floor.coords = cube_texture(floor.coords);
+    Shader mazey("../vertm.glsl", "../fragm.glsl");
+    
     Model maze(
-            MazeFloor().coords,
-            Shader("../vert.glsl", "../frag.glsl"));
+            floor.coords,
+            mazey, 1);
     Matrix4 maze_roty;
     maze_roty.rotate_y(180);
     maze.model = maze_roty;
@@ -119,14 +174,19 @@ int main(void) {
 
     // make a floor
     float init[3] = {0.90, 0, -0.94};
+    Shader person("../vert.glsl", "../frag.glsl");
     Model protagonist(
             DiscoCube().coords,
-            Shader("../vert.glsl", "../frag.glsl"));
+            person, 0);
     Matrix4 pro_trans, pro_roty;
     pro_trans.translate(init[0], init[1], init[2]);
     pro_roty.rotate_y(180);
     protagonist.model = pro_roty*pro_trans;
 
+
+	glActiveTexture(GL_TEXTURE0);
+	GLuint jeans = loadTexture("../rick.jpg");
+	glBindTexture(GL_TEXTURE_2D, jeans);
     // setup camera
     Matrix4 projection;
     projection.perspective(45, 1, .01, 10);
