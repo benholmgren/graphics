@@ -146,8 +146,8 @@ int main(void) {
     // camera in box
     Camera inside;
     inside.projection = projection;
-    inside.eye = Vector4(init[0],init[1],init[2]);
-    inside.origin = Vector4(0,0,-init[2]);
+    inside.eye = Vector4(-0.9,-0.9,0.94);
+    inside.origin = Vector4(-0.9,-0.9,-0.94);
     inside.up = Vector4(0,1,0);
 
     // set the light position
@@ -168,49 +168,48 @@ int main(void) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        if(count%2 == 0){
+            camera = regular;
+        }
+        else{
+        camera = inside;
+        }
+        
         Matrix4 pro_transl;
         if (isPressed(window, GLFW_KEY_W)) {
             pro_transl.translate(0,0,move);
-	    inside.eye = inside.eye + Vector4(0,0,move);
-	    std::cout << inside.eye.values[0] << " " << inside.eye.values[1] << " " << inside.eye.values[2] << std::endl;
+	    inside.eye = inside.eye + Vector4(0,0,-move);
 
         }
         else if (isPressed(window, GLFW_KEY_S)) {
-            pro_transl.translate(0,0, -1 * move);
-		inside.eye = inside.eye + Vector4(0,0,-move);
+            pro_transl.translate(0,0, -move);
+		inside.eye = inside.eye + Vector4(0,0,move);
 
         }
         else if (isPressed(window, GLFW_KEY_A)) {
             pro_transl.translate(move,0,0);
-		inside.eye = inside.eye + Vector4(move,0,0);
+            inside.eye = inside.eye + Vector4(move,0,0);
 
         }
         else if (isPressed(window, GLFW_KEY_D)) {
-            pro_transl.translate(-1 * move, 0, 0);
-		inside.eye = inside.eye + Vector4(-move,0,0);
+            pro_transl.translate(-move, 0, 0);
+            inside.eye = inside.eye + Vector4(-move,0,0);
 
         }
-	else if (isPressed(window, GLFW_KEY_SPACE)){
+        
+        if (isPressed(window, GLFW_KEY_SPACE)){
 		count++;
-	}
-	else if (isPressed(window, GLFW_KEY_X)){
-		count++;
-	}
-	else if (isPressed(window, GLFW_KEY_F)){
+        }
+        else if (isPressed(window, GLFW_KEY_F)){
 		angle = angle + move;
-		inside.origin = cos(angle);
-	}
-	else if (isPressed(window, GLFW_KEY_G)){
+		inside.origin = Vector4(-cos(angle),-0.9,-cos(angle));
+        }
+        else if (isPressed(window, GLFW_KEY_G)){
 		angle = angle - move;
-		inside.origin = cos(angle);
-	}
+		inside.origin = Vector4(-cos(angle),-0.9,-cos(angle));
+        }
 
 		
-	if(count%2 == 0){
-		camera = regular;
-	}else{
-		camera = inside;
-	}
         
         protagonist.model = protagonist.model * pro_transl;
         // render the object and the floor
