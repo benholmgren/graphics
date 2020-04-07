@@ -205,12 +205,12 @@ int main(void) {
 		count++;
         }
         else if (isPressed(window, GLFW_KEY_F)){
-		angle = angle + move;
-		inside.origin = Vector4(-cos(angle),-0.9,-cos(angle));
+		angle = angle + 5*move;
+		inside.origin = Vector4(100*cos(angle),-0.9,100*sin(angle));
         }
         else if (isPressed(window, GLFW_KEY_G)){
-		angle = angle - move;
-		inside.origin = Vector4(-cos(angle),-0.9,cos(angle));
+		angle = angle - 5*move;
+		inside.origin = Vector4(100*cos(angle),-0.9,100*sin(angle));
         }
         
         
