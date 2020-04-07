@@ -927,21 +927,80 @@ class Wall {
 	public:
 	std::vector<float> coords;
 	Wall(float x, float y, float z, float size ) {
-	//origin
+	//origin SW
 	float vertex1[6] = {x, y, z, .5, .5, 1};
-	//Bottom right 1,0,0
+	//Bottom SE 1,0,0
 	float vertex2[6] = {x+size, y, z, .2, .2, .5};
-	//Bottom
-	//Bottom
-	/*
-	 x, y, ,  , 1.0f, 0.0f,  0.0f,  1.0f,  0.0,
-         x, -0.94f, -0.03f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0,
-         x, -0.94f,  0.03f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0,
-         , -0.94f,  0.03f,  0.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0,
-         0.00f, -0.94f,  0.03f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0,
-         0.00f, -0.94f, -0.03f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0
-	 */
+	//bottom NE 
+	float vertex3[6] = {x+size, y, z+size, .3, .3, .7};
+	//bottom NW
+	float vertex4[6] = {x, y, z+size, .4, .4, .8};
+	//Top SW
+	float vertex5[6] = {x, y+size, z, .5, .5, 1};
+	//Top SE 1,0,0
+	float vertex6[6] = {x+size, y+size, z, .2, .2, .5};
+	//Top NE 
+	float vertex7[6] = {x+size, y+size, z+size, .3, .3, .7};
+	//Top NW
+	float vertex8[6] = {x, y+size, z+size, .4, .4, .8};
+	//Front face:
 
+	//Front face
+	float normal1[3] = {0, 0, -1};
+	makeface(coords,vertex1, vertex2, vertex6, vertex5, normal1);
+	//top face
+	float normal2[3] = {0, 1, 0};
+	makeface(coords,vertex5, vertex6, vertex7, vertex8, normal2);
+	//bot face
+	float normal3[3] = {0, -1, 0};
+	makeface(coords,vertex1, vertex4, vertex3, vertex2, normal3);
+	//right face
+	float normal4[3] = {1, 0, 0};
+	makeface(coords,vertex2, vertex3, vertex7, vertex6, normal4);
+	//left face
+	float normal5[3] = {-1, 0, 0};
+	makeface(coords,vertex1, vertex4, vertex8, vertex5, normal5);
+	//back face
+	float normal6[3] = {0, 0, 1};
+	makeface(coords,vertex4, vertex8, vertex7, vertex3, normal6);
+	}
+	void addvert(std::vector<float> coords,float vert[6]){
+		for(int i = 0; i < 6; i++){
+			coords.push_back(vert[i]);
+		}
+	}
+	void makeface(std::vector<float> coords,
+	float vert1[6], float vert2[6], float vert3[6], float vert4[6], float norm[3]){
+
+		addvert(coords,vert1);
+		coords.push_back(norm[0]);
+		coords.push_back(norm[1]);
+		coords.push_back(norm[2]);
+
+		addvert(coords,vert2);
+		coords.push_back(norm[0]);
+		coords.push_back(norm[1]);
+		coords.push_back(norm[2]);
+
+		addvert(coords,vert3);
+		coords.push_back(norm[0]);
+		coords.push_back(norm[1]);
+		coords.push_back(norm[2]);
+
+		addvert(coords,vert3);
+		coords.push_back(norm[0]);
+		coords.push_back(norm[1]);
+		coords.push_back(norm[2]);
+
+		addvert(coords,vert4);
+		coords.push_back(norm[0]);
+		coords.push_back(norm[1]);
+		coords.push_back(norm[2]);
+
+		addvert(coords,vert1);
+		coords.push_back(norm[0]);
+		coords.push_back(norm[1]);
+		coords.push_back(norm[2]);
 		
 	}
 };
