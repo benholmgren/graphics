@@ -125,7 +125,7 @@ std::vector<Triangle> random_box() {
 int main(int argc, char** argv) {
 
     // set the number of boxes
-    int NUM_BOXES = 12;
+    int NUM_BOXES = 1;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image image(640, 480);
@@ -151,19 +151,21 @@ int main(int argc, char** argv) {
     Lights lights = { &l1, &l2 };
 
     // setup world
-    World posworld;
-    World negworld;
+    World pposworld;
+    World nposworld;
+    World pnegworld;
+    World nnegworld;
 
     // add the light
-    posworld.append(Sphere(l1.position(), .25, glm::vec3(1,1,1)));
+    pposworld.append(Sphere(l1.position(), .25, glm::vec3(1,1,1)));
 
     // and the spheres
     Sphere s1 = Sphere(glm::vec3(1, 1, 1), 1, rand_color());
-    posworld.append(s1);
+    pposworld.append(s1);
     Sphere s2 = Sphere(glm::vec3(2, 2, 4), 2, rand_color());
-    posworld.append(s2);
+    pposworld.append(s2);
     Sphere s3 = Sphere(glm::vec3(3, 3, 6), 3, rand_color());
-    posworld.append(s3);
+    pposworld.append(s3);
     
     
     //generate box for bounding spheres
@@ -188,15 +190,27 @@ int main(int argc, char** argv) {
         float  z = rand_val() * 5;
         float scale = rand_val() * 2;
         if (x >= 0) {
-            posworld.append(Obj::make_box(glm::vec3(x, y, z), scale, rand_color()));
+            if (y >= 0) {
+                pposworld.append(Obj::make_box(glm::vec3(x, y, z), scale, rand_color()));
+            }
+            else{
+                pposworld.append(Obj::make_box(glm::vec3(x, y, z), scale, rand_color()));
+            }
 
         }
         else if(x< 0){
-            negworld.append(Obj::make_box(glm::vec3(x, y, z), scale, rand_color()));
+            if (y >= 0) {
+                pnegworld.append(Obj::make_box(glm::vec3(x, y, z), scale, rand_color()));
+            }
+            else{
+                nnegworld.append(Obj::make_box(glm::vec3(x, y, z), scale, rand_color()));
+            }
         }
     }
-    posworld.lock();
-    negworld.lock();
+    pposworld.lock();
+    nposworld.lock();
+    pnegworld.lock();
+    nnegworld.lock();
     // create the intersector
     BruteForceIntersector bruteintersector;
     
@@ -210,7 +224,7 @@ int main(int argc, char** argv) {
     // render
     Timer timer;
     timer.start();
-    renderer.render(image, camera, lights, posworld, negworld);
+    renderer.render(image, camera, lights, pposworld, nposworld, pnegworld, nnegworld);
     timer.stop();
 
     image.save_image("/Users/benjaminholmgren/Desktop/Courses/graphics/lab9/lab9/img/ray-traced.bmp");

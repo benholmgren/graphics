@@ -20,6 +20,13 @@ My findings are as follows:
 
 ---
 
+After this, I thought splitting the area we're considering for the first intersection again should split the rendering time again in half.
+So I then split the frames of consideration into positive and negative y valued sections, alongside positive and negative x values, which caused rendering to occur at 4x the initial speed. 
+And, the following data shows that this was exactly the case:
+
+![Second Seperation](After4.png)
+---
+
 And For fun, here is the resulting image after 12 boxes were created on our final test run:
 
 ![image](lab9/img/ray-traced.bmp)

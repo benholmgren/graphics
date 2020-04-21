@@ -80,18 +80,32 @@ public:
         bitmap_image &image,
         const Camera& camera,
         const Lights& lights,
-        const World& posworld,
-        const World& negworld
+        const World& pposworld,
+        const World& nposworld,
+        const World& pnegworld,
+        const World& nnegworld
     ) {
-        for (int y = 0; y < image.height(); ++y) {
+        for (int y = 0; y < image.height()/2; ++y) {
             for (int x = 0; x < image.width()/2; ++x) {
                 Ray ray = camera.make_ray(image.width(), image.height(), x, y);
-                glm::vec3 c = render_pixel(camera, lights, negworld, ray);
+                glm::vec3 c = render_pixel(camera, lights, nnegworld, ray);
                 image.set_pixel(x, image.height()-y-1, to_color(c));
             }
             for (int x = image.width()/2; x < image.width(); ++x) {
                 Ray ray = camera.make_ray(image.width(), image.height(), x, y);
-                glm::vec3 c = render_pixel(camera, lights, posworld, ray);
+                glm::vec3 c = render_pixel(camera, lights, nposworld, ray);
+                image.set_pixel(x, image.height()-y-1, to_color(c));
+            }
+        }
+        for (int y = image.height()/2; y < image.height(); ++y) {
+            for (int x = 0; x < image.width()/2; ++x) {
+                Ray ray = camera.make_ray(image.width(), image.height(), x, y);
+                glm::vec3 c = render_pixel(camera, lights, pnegworld, ray);
+                image.set_pixel(x, image.height()-y-1, to_color(c));
+            }
+            for (int x = image.width()/2; x < image.width(); ++x) {
+                Ray ray = camera.make_ray(image.width(), image.height(), x, y);
+                glm::vec3 c = render_pixel(camera, lights, pposworld, ray);
                 image.set_pixel(x, image.height()-y-1, to_color(c));
             }
         }
