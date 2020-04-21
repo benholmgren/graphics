@@ -125,7 +125,7 @@ std::vector<Triangle> random_box() {
 int main(int argc, char** argv) {
 
     // set the number of boxes
-    int NUM_BOXES = 1;
+    int NUM_BOXES = 12;
 
     // create an image 640 pixels wide by 480 pixels tall
     bitmap_image image(640, 480);
