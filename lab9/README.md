@@ -1,4 +1,4 @@
-# Lab 9
+# Ben Holmgren Lab 9
 ---
 As a baseline, running the provided code gave us the following times for each number of boxes:
 
