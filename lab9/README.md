@@ -1,3 +1,3 @@
 # Lab 9
 ---
-![Baseline][BasePlot.png]
+![Baseline](BasePlot.png)
